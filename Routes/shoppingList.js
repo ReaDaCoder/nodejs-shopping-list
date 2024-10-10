@@ -1,6 +1,7 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import { v4 as uuidv4 } from 'uuid';
+const {v4: uuidv4} = require("uuid");
+const fs = require("fs");
 
 const listItems = [
   {
@@ -21,12 +22,26 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  const items = req.body;
+  console.log(req.body)
+  const {listItem} = req.body;
 
-  listItems.push({ ...items, id: uuidv4() });
+  listItems.push({ listItem:listItem, id: uuidv4() });
 
-  res.send(`${items} has been added to the shopping list`);
+
+  res.send(`${listItem} has been added to the shopping list`);
 })
+
+const result = fs.readFileSync(
+  './items.json'
+)
+
+fs.writeFile('/items.json', err => {
+  if (err) {
+    console.error(err);
+  } else {
+    // file written successfully
+  }
+});
 
 router.put('/', (req, res)=>{
   res.send()
@@ -40,4 +55,4 @@ router.delete('/:id', (req, res) => {
   res.send(`${id} deleted successfully from database`);
 });
 
-export default router
+module.exports =  router
